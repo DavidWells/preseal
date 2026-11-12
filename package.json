@@ -1,0 +1,86 @@
+{
+  "name": "preseal",
+  "version": "0.0.1",
+  "description": "Encrypt env vars before your host sees them. Ciphertext goes to Netlify, AWS SSM or 1Password; the decryption key lives in your code.",
+  "main": "src/index.js",
+  "types": "types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "adapters": [
+        "types/adapters/index.d.ts"
+      ],
+      "seal": [
+        "types/seal.d.ts"
+      ]
+    }
+  },
+  "bin": {
+    "preseal": "bin/preseal.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./adapters": {
+      "types": "./types/adapters/index.d.ts",
+      "default": "./src/adapters/index.js"
+    },
+    "./seal": {
+      "types": "./types/seal.d.ts",
+      "default": "./src/seal.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "bin",
+    "src",
+    "types",
+    "README.md"
+  ],
+  "author": "David Wells",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/preseal.git"
+  },
+  "homepage": "https://github.com/DavidWells/preseal#readme",
+  "bugs": {
+    "url": "https://github.com/DavidWells/preseal/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18.3"
+  },
+  "scripts": {
+    "test": "uvu tests \".*\\.test.js$\"",
+    "build": "npm run types",
+    "types": "tsc --emitDeclarationOnly --declaration --outDir types",
+    "prepublishOnly": "npm run build",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish"
+  },
+  "keywords": [
+    "env",
+    "env-vars",
+    "environment-variables",
+    "dotenv",
+    "secrets",
+    "encryption",
+    "encrypt-env",
+    "sealed-env-vars",
+    "aes-256-gcm",
+    "netlify",
+    "aws-ssm",
+    "1password",
+    "last-mile-decryption"
+  ],
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^5.7.3",
+    "uvu": "^0.5.6"
+  }
+}

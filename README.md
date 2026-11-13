@@ -6,6 +6,10 @@
 
 Encrypt env vars before your host sees them. The host stores ciphertext, the key lives in your repo, and your code decrypts in memory at runtime.
 
+preseal is the tool for the approach in the post [Encrypt env vars before your host sees them](https://davidwells.io/blog/encrypt-env-vars-before-your-host-sees-them).
+
+> **This is not a silver bullet.** preseal makes one kind of leak less damaging: someone who gets only your host's env var store sees ciphertext. It does nothing against an attacker who also has your code, or who can run code inside your app. [Read the post](https://davidwells.io/blog/encrypt-env-vars-before-your-host-sees-them) for how it helps and where it stops, and see [What this protects against](#what-this-protects-against-and-what-it-doesnt) below.
+
 ```bash
 npx preseal set STRIPE_SECRET_KEY --to netlify
 ```
@@ -571,6 +575,24 @@ await seal({
 Three optional members make a slow store faster: `getMany(names)` reads many names in one call and returns `[{ value }, { error }, ...]` in the same order, `setMany(entries)` writes many `[name, value]` pairs in one call, and `concurrency` says how many `set` calls may run at once.
 
 The built-in adapters are exported from `preseal/adapters`: `createNetlifyAdapter`, `createSsmAdapter`, `createOnePasswordAdapter`, `createDotenvAdapter`, `createStdoutAdapter` and `resolveTarget`.
+
+## Use it with an AI agent
+
+The repo ships an agent skill in [`skill/SKILL.md`](skill/SKILL.md). It teaches a coding agent the commands, the order to do things in, and the rules that keep plaintext out of command lines and chat: read values with `--from`, run `--dry-run` first, verify with `check` and never `decrypt`.
+
+For Claude Code, copy it into your skills folder:
+
+```bash
+mkdir -p ~/.claude/skills/preseal && cp node_modules/preseal/skill/SKILL.md ~/.claude/skills/preseal/
+```
+
+Without a local install, take the file from the repo:
+
+```bash
+git clone https://github.com/DavidWells/preseal.git && mkdir -p ~/.claude/skills/preseal && cp preseal/skill/SKILL.md ~/.claude/skills/preseal/
+```
+
+Other agents can read the same file: point them at `node_modules/preseal/skill/SKILL.md`.
 
 ## Value format
 

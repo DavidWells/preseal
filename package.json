@@ -36,6 +36,7 @@
     "bin",
     "src",
     "types",
+    "skill",
     "README.md"
   ],
   "author": "David Wells",

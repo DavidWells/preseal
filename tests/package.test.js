@@ -30,4 +30,18 @@ test('typesVersions covers every subpath for older TypeScript resolution', () =>
   }
 })
 
+// The agent skill is published with the package, so `node_modules/preseal/skill` exists.
+test('the agent skill ships in the package and names itself', () => {
+  assert.ok(pkg.files.includes('skill'))
+  const text = fs.readFileSync(path.join(__dirname, '../skill/SKILL.md'), 'utf8')
+  const front = /^---\nname: (\S+)\ndescription: (.+)\n---\n/.exec(text)
+  assert.ok(front, 'frontmatter with name and description')
+  assert.is(front[1], pkg.name)
+  assert.ok(front[2].length > 80 && front[2].length < 1024, 'a description an agent can match on')
+  // Hints an agent would copy must not teach the unsafe forms.
+  for (const block of text.matchAll(/```bash\n([\s\S]*?)```/g)) {
+    assert.not.match(block[1], /--value|preseal decrypt|--force/)
+  }
+})
+
 test.run()
